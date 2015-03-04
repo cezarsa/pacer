@@ -47,7 +47,13 @@ module Pacer::Pipes
           self.next_path = looping_pipe.getCurrentPath if pathEnabled
         else
           element = starts.next
-          self.next_path = starts.getCurrentPath if pathEnabled
+          if pathEnabled
+            if starts.respond_to? :getCurrentPath
+              self.next_path = starts.getCurrentPath
+            else
+              self.next_path = java.util.ArrayList.new
+            end
+          end
           depth = 0
         end
         wrapped = wrapper.new(graph, element)
